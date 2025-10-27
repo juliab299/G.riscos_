@@ -1,0 +1,69 @@
+package br.com.techmaster.gestaoriscos.app;
+
+import br.com.techmaster.gestaoriscos.dao.DatabaseInitializer;
+import br.com.techmaster.gestaoriscos.dao.RiscoDao;
+import br.com.techmaster.gestaoriscos.dao.TipoRiscoDAO;
+import br.com.techmaster.gestaoriscos.model.Risco;
+import br.com.techmaster.gestaoriscos.model.TipoRisco;
+
+import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.List;
+
+public class MainApp {
+    
+    public static void main(String[] args) {
+        
+        System.out.println("--- INICIANDO TESTE DE PERSISTÊNCIA ---");
+
+       
+        DatabaseInitializer.createTables();
+        
+        RiscoDao riscoDao = new RiscoDao();
+        TipoRiscoDAO tipoRiscoDAO = new TipoRiscoDAO();
+        
+        TipoRisco tipoOperacional = new TipoRisco();
+		tipoOperacional.setNome("Operacional");
+		
+       
+		tipoOperacional = tipoRiscoDAO.salvar(tipoOperacional); 
+		System.out.println("TipoRisco salvo com sucesso. ID: " + tipoOperacional.getId());
+		
+		
+         
+		Risco novoRisco = new Risco();
+		novoRisco.setDescricao("Falha de energia no Data Center A.");
+		novoRisco.setOrigem("Relatório de Auditoria");
+		novoRisco.setDataIdentificacao(LocalDate.now());
+		novoRisco.setStatus("Ativo");
+		novoRisco.setTipo(tipoOperacional); 
+		
+		
+		Risco riscoSalvo = riscoDao.salvar(novoRisco);
+		
+		if (riscoSalvo != null) {
+		    System.out.println("\n✅ Risco salvo com sucesso!");
+		    System.out.println("ID Gerado: " + riscoSalvo.getId());
+		    System.out.println("Descrição: " + riscoSalvo.getDescricao());
+		    System.out.println("Tipo: " + riscoSalvo.getTipo().getNome());
+		} else {
+		    System.err.println("\n❌ Falha ao salvar o Risco.");
+		}
+		
+		
+		
+		System.out.println("\n--- LISTA DE RISCOS SALVOS ---");
+		List<Risco> riscos = riscoDao.listarTodos();
+		
+		if (!riscos.isEmpty()) {
+		    riscos.forEach(r -> {
+		        String tipoNome = r.getTipo() != null ? r.getTipo().getNome() : "N/A";
+		        System.out.printf("Risco ID %d: %s (Tipo: %s, Status: %s)%n", 
+		                          r.getId(), r.getDescricao(), tipoNome, r.getStatus());
+		    });
+		} else {
+		    System.out.println("Nenhum risco encontrado no banco de dados.");
+		}
+    }
+}
+

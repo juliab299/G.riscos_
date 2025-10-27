@@ -1,0 +1,73 @@
+package br.com.techmaster.gestaoriscos.dao;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.SQLException;
+public class DatabaseInitializer {
+	public static void createTables() {
+        try (Connection conn = ConnectionFactory.getConnection();
+             Statement stmt = conn.createStatement()) {
+
+            // 1. Tabela TIPO_RISCO
+            stmt.execute("CREATE TABLE IF NOT EXISTS TIPO_RISCO (" +
+                         "id BIGINT PRIMARY KEY AUTO_INCREMENT, " +
+                         "nome VARCHAR(100) NOT NULL UNIQUE)");
+
+            // 2. Tabela PESSOA
+            stmt.execute("CREATE TABLE IF NOT EXISTS PESSOA (" +
+                         "id BIGINT PRIMARY KEY AUTO_INCREMENT, " +
+                         "nome VARCHAR(255) NOT NULL, " +
+                         "email VARCHAR(255) UNIQUE)");
+
+            // 3. Tabela RISCO
+            stmt.execute("CREATE TABLE IF NOT EXISTS RISCO (" +
+                         "id BIGINT PRIMARY KEY AUTO_INCREMENT, " +
+                         "descricao VARCHAR(500) NOT NULL, " +
+                         "origem VARCHAR(255), " +
+                         "data_identificacao DATE NOT NULL, " +
+                         "status VARCHAR(50), " +
+                         "id_tipo BIGINT, " +
+                         "FOREIGN KEY (id_tipo) REFERENCES TIPO_RISCO(id))");
+            
+            // 4. Tabela AVALIACAO_RISCO (usa id_avaliador da tabela PESSOA)
+            stmt.execute("CREATE TABLE IF NOT EXISTS AVALIACAO_RISCO (" +
+                         "id BIGINT PRIMARY KEY AUTO_INCREMENT, " +
+                         "id_risco BIGINT NOT NULL, " +
+                         "impacto INT NOT NULL, " +
+                         "probabilidade INT NOT NULL, " +
+                         "urgencia INT NOT NULL, " +
+                         "criticidade INT NOT NULL, " +
+                         "data_avaliacao DATE NOT NULL, " +
+                         "id_avaliador BIGINT NOT NULL, " +
+                         "FOREIGN KEY (id_risco) REFERENCES RISCO(id), " +
+                         "FOREIGN KEY (id_avaliador) REFERENCES PESSOA(id))");
+
+            // 5. Tabela PLANO_MITIGACAO
+             stmt.execute("CREATE TABLE IF NOT EXISTS PLANO_MITIGACAO (" +
+                         "id BIGINT PRIMARY KEY AUTO_INCREMENT, " +
+                         "id_risco BIGINT NOT NULL, " +
+                         "nome VARCHAR(255) NOT NULL, " +
+                         "descricao VARCHAR(1000), " +
+                         "status VARCHAR(50), " +
+                         "FOREIGN KEY (id_risco) REFERENCES RISCO(id))");
+
+            // 6. Tabela ACAO_PLANO (usa id_responsavel da tabela PESSOA)
+            stmt.execute("CREATE TABLE IF NOT EXISTS ACAO_PLANO (" +
+                         "id BIGINT PRIMARY KEY AUTO_INCREMENT, " +
+                         "id_plano BIGINT NOT NULL, " +
+                         "descricao_acao VARCHAR(500) NOT NULL, " +
+                         "prazo_limite DATE, " +
+                         "data_conclusao DATE, " +
+                         "progresso INT, " +
+                         "id_responsavel BIGINT NOT NULL, " +
+                         "observacoes VARCHAR(1000), " +
+                         "FOREIGN KEY (id_plano) REFERENCES PLANO_MITIGACAO(id), " +
+                         "FOREIGN KEY (id_responsavel) REFERENCES PESSOA(id))");
+
+            System.out.println("Tabelas criadas com sucesso ou já existentes.");
+
+        } catch (SQLException e) {
+            System.err.println("Erro ao criar tabelas: " + e.getMessage());
+        }
+    }
+}
+

@@ -1,0 +1,29 @@
+package br.com.techmaster.gestaoriscos.model;
+
+import java.time.LocalDate;
+
+public class Risco {
+    private int id;
+    private String descricao;
+    private String origem;
+    private String contexto;
+    private LocalDate dataIdentificacao;
+    private String status;
+    private TipoRisco tipoRisco; // Relacionamento
+
+    // Getters e Setters
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
+    public String getDescricao() { return descricao; }
+    public void setDescricao(String descricao) { this.descricao = descricao; }
+    public String getOrigem() { return origem; }
+    public void setOrigem(String origem) { this.origem = origem; }
+    public String getContexto() { return contexto; }
+    public void setContexto(String contexto) { this.contexto = contexto; }
+    public LocalDate getDataIdentificacao() { return dataIdentificacao; }
+    public void setDataIdentificacao(LocalDate dataIdentificacao) { this.dataIdentificacao = dataIdentificacao; }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
+    public TipoRisco getTipoRisco() { return tipoRisco; }
+    public void setTipoRisco(TipoRisco tipoRisco) { this.tipoRisco = tipoRisco; }
+}

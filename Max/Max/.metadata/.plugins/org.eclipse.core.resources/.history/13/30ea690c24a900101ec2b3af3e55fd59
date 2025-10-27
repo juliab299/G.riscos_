@@ -1,0 +1,5 @@
+package br.com.techmaster.dal;
+
+public class AvaliacaoRiscoDAO {
+
+}

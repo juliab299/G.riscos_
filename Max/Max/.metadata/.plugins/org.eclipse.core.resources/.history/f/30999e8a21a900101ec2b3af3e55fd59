@@ -1,0 +1,61 @@
+package br.com.techmaster.gestaoriscos.model;
+import java.time.LocalDate;
+
+public class AvaliacaoRisco {
+	private Long id;
+    private Risco risco; 
+    private Pessoa avaliador; 
+    private int impacto;
+    private int probabilidade; 
+    private int urgencia;
+    private int criticidade; 
+    private LocalDate dataAvaliacao;
+	public Long getId() {
+		return id;
+	}
+	public void setId(Long id) {
+		this.id = id;
+	}
+	public Risco getRisco() {
+		return risco;
+	}
+	public void setRisco(Risco risco) {
+		this.risco = risco;
+	}
+	public Pessoa getAvaliador() {
+		return avaliador;
+	}
+	public void setAvaliador(Pessoa avaliador) {
+		this.avaliador = avaliador;
+	}
+	public int getImpacto() {
+		return impacto;
+	}
+	public void setImpacto(int impacto) {
+		this.impacto = impacto;
+	}
+	public int getProbabilidade() {
+		return probabilidade;
+	}
+	public void setProbabilidade(int probabilidade) {
+		this.probabilidade = probabilidade;
+	}
+	public int getUrgencia() {
+		return urgencia;
+	}
+	public void setUrgencia(int urgencia) {
+		this.urgencia = urgencia;
+	}
+	public int getCriticidade() {
+		return criticidade;
+	}
+	public void setCriticidade(int criticidade) {
+		this.criticidade = criticidade;
+	}
+	public LocalDate getDataAvaliacao() {
+		return dataAvaliacao;
+	}
+	public void setDataAvaliacao(LocalDate dataAvaliacao) {
+		this.dataAvaliacao = dataAvaliacao;
+	}
+}

@@ -1,0 +1,61 @@
+package br.com.techmaster.gestaoriscos.dao;
+
+import br.com.techmaster.gestaoriscos.model.Risco;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.List;
+
+public class RiscoDao {
+
+    
+    private TipoRiscoDAO tipoRiscoDAO = new TipoRiscoDAO();
+
+    /**
+     * @param 
+     * @return 
+     */
+    public Risco salvar(Risco risco) {
+        String sql = "INSERT INTO RISCO (descricao, origem, data_identificacao, status, id_tipo) VALUES (?, ?, ?, ?, ?)";
+        
+        try (Connection conn = ConnectionFactory.getConnection();
+            
+             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            stmt.setString(1, risco.getDescricao());
+            stmt.setString(2, risco.getOrigem());
+            
+         
+            stmt.setDate(3, java.sql.Date.valueOf(risco.getDataIdentificacao())); 
+            
+            stmt.setString(4, risco.getStatus());
+            stmt.setLong(5, risco.getTipo().getId());
+            int affectedRows = stmt.executeUpdate(); 
+
+            if (affectedRows > 0) {
+                // Obtém o ID gerado
+                try (ResultSet rs = stmt.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        risco.setId(rs.getLong(1));
+                    }
+                }
+            }
+            return risco;
+
+        } catch (SQLException e) {
+            System.err.println("Erro ao salvar Risco: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+	public List<Risco> listarTodos() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+    
+}

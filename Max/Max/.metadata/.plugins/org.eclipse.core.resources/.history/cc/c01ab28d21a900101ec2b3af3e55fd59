@@ -1,0 +1,42 @@
+package br.com.techmaster.gestaoriscos.model;
+
+public class TipoRisco {
+	    private Long id;
+	    private String nome;
+		public Long getId() {
+			return id;
+		}
+		public void setId(long id) {
+			this.id = (long) id;
+		}
+		public String getNome() {
+			return nome;
+		}
+		public void setNome(String nome) {
+			this.nome = nome;
+		}
+		public String getDescricao() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		public String getOrigem() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		public String getDataIdentificacao() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		public String getStatus() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		public TipoRisco getTipo1() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		public TipoRisco getTipo() {
+			// TODO Auto-generated method stub
+			return null;
+		} 
+}

@@ -1,0 +1,103 @@
+package br.com.techmaster.gestaoriscos.model;
+import java.time.LocalDate;
+import java.util.List;
+
+public class Risco {
+	private Long id;
+    private String descricao;
+    private String origem;
+    private LocalDate dataIdentificacao;
+    private String status; 
+    private TipoRisco tipo; 
+
+   
+    private List<AvaliacaoRisco> historicoAvaliacoes;
+    private List<PlanoMitigacao> planosMitigacao;
+    
+   
+    public Risco() {}
+
+
+	public Long getId() {
+		return id;
+	}
+
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+
+	public String getDescricao() {
+		return descricao;
+	}
+
+
+	public void setDescricao(String descricao) {
+		this.descricao = descricao;
+	}
+
+
+	public String getOrigem() {
+		return origem;
+	}
+
+
+	public void setOrigem(String origem) {
+		this.origem = origem;
+	}
+
+
+	public LocalDate getDataIdentificacao() {
+		return dataIdentificacao;
+	}
+
+
+	public void setDataIdentificacao(LocalDate dataIdentificacao) {
+		this.dataIdentificacao = dataIdentificacao;
+	}
+
+
+	public String getStatus() {
+		return status;
+	}
+
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
+
+	public TipoRisco getTipo() {
+		return tipo;
+	}
+
+
+	public void setTipo(TipoRisco tipo) {
+		this.tipo = tipo;
+	}
+
+
+	public List<AvaliacaoRisco> getHistoricoAvaliacoes() {
+		return historicoAvaliacoes;
+	}
+
+
+	public void setHistoricoAvaliacoes(List<AvaliacaoRisco> historicoAvaliacoes) {
+		this.historicoAvaliacoes = historicoAvaliacoes;
+	}
+
+
+	public List<PlanoMitigacao> getPlanosMitigacao() {
+		return planosMitigacao;
+	}
+
+
+	public void setPlanosMitigacao(List<PlanoMitigacao> planosMitigacao) {
+		this.planosMitigacao = planosMitigacao;
+	}
+   
+
+   
+}
+

@@ -1,0 +1,76 @@
+package br.com.techmaster.gestaoriscos.dao;
+
+import br.com.techmaster.gestaoriscos.model.TipoRisco;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Optional;
+
+public class TipoRiscoDAO {
+
+    /**
+     * 
+     */
+    public Optional<TipoRisco> buscarPorId(Long id) {
+        String sql = "SELECT id, nome FROM TIPO_RISCO WHERE id = ?";
+        
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setLong(1, id);
+            
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    TipoRisco tipo = new TipoRisco();
+                    tipo.setId(rs.getLong("id"));
+                    tipo.setNome(rs.getString("nome"));
+                    return Optional.of(tipo);
+                }
+            }
+        } catch (SQLException e) {
+            System.err.println("Erro ao buscar TipoRisco: " + e.getMessage());
+            e.printStackTrace();
+        }
+        return Optional.empty(); 
+    }
+    
+    /**
+     *
+     * @param 
+     * @return 
+     */
+    public TipoRisco salvar(TipoRisco tipoOperacional) {
+        
+        String sql = "INSERT INTO RISCO (descricao, origem, data_identificacao, status, id_tipo) VALUES (?, ?, ?, ?, ?)";
+        
+        try (Connection conn = ConnectionFactory.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            stmt.setString(1, tipoOperacional.getDescricao());
+            stmt.setString(2, tipoOperacional.getOrigem());
+            stmt.setDate(3, java.sql.Date.valueOf(tipoOperacional.getDataIdentificacao())); 
+            stmt.setString(4, tipoOperacional.getStatus());
+            
+            
+            stmt.setLong(5, tipoOperacional.getTipo() != null ? ((TipoRisco) tipoOperacional.getTipo()).getId() : null); 
+
+            int affectedRows = stmt.executeUpdate(); 
+
+            if (affectedRows > 0) {
+                try (ResultSet rs = stmt.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        tipoOperacional.setId(rs.getLong(1));
+                    }
+                }
+            }
+            return tipoOperacional;
+
+        } catch (SQLException e) {
+            System.err.println("Erro ao salvar Risco: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+}

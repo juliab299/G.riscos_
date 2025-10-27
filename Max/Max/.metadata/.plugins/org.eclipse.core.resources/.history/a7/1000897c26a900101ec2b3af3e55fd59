@@ -1,0 +1,33 @@
+<%-- /src/main/webapp/form-risco.jsp --%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Cadastro de Risco</title>
+</head>
+<body>
+    <h1>Cadastrar Novo Risco</h1>
+    <form action="riscos" method="post">
+        <label for="descricao">Descrição:</label><br>
+        <textarea id="descricao" name="descricao" rows="4" cols="50" required></textarea><br><br>
+
+        <label for="origem">Origem:</label><br>
+        <input type="text" id="origem" name="origem"><br><br>
+
+        <label for="dataIdentificacao">Data de Identificação:</label><br>
+        <input type="date" id="dataIdentificacao" name="dataIdentificacao" required><br><br>
+
+        <label for="tipoRisco">Tipo de Risco:</label><br>
+        <select id="tipoRisco" name="tipoRisco">
+            <%-- Aqui você deveria carregar os tipos de risco do banco de dados --%>
+            <option value="1">Operacional</option>
+            <option value="2">Segurança</option>
+            <option value="3">Infraestrutura</option>
+            <option value="4">Compliance</option>
+        </select><br><br>
+
+        <input type="submit" value="Salvar">
+    </form>
+</body>
+</html>

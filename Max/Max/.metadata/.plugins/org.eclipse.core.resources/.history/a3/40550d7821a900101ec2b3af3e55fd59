@@ -1,0 +1,133 @@
+package br.com.techmaster.gestaoriscos.dao;
+
+import br.com.techmaster.gestaoriscos.model.Risco;
+import br.com.techmaster.gestaoriscos.model.TipoRisco;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+public class RiscoDao {
+
+    
+    private TipoRiscoDAO tipoRiscoDAO = new TipoRiscoDAO();
+
+    /**
+     * @param 
+     * @return 
+     */
+    public Risco salvar(Risco risco) {
+        String sql = "INSERT INTO RISCO (descricao, origem, data_identificacao, status, id_tipo) VALUES (?, ?, ?, ?, ?)";
+        
+        try (Connection conn = ConnectionFactory.getConnection();
+            
+             PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            stmt.setString(1, risco.getDescricao());
+            stmt.setString(2, risco.getOrigem());
+            
+         
+            stmt.setDate(3, java.sql.Date.valueOf(risco.getDataIdentificacao())); 
+            
+            stmt.setString(4, risco.getStatus());
+            stmt.setLong(5, risco.getTipoRisco().getId());
+            int affectedRows = stmt.executeUpdate(); 
+
+            if (affectedRows > 0) {
+                // Obtém o ID gerado
+                try (ResultSet rs = stmt.getGeneratedKeys()) {
+                    if (rs.next()) {
+                        risco.setId(rs.getLong(1));
+                    }
+                }
+            }
+            return risco;
+
+        } catch (SQLException e) {
+            System.err.println("Erro ao salvar Risco: " + e.getMessage());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+	public List<Risco> listarTodos() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+    
+
+
+public Risco buscarPorId(int id) {
+    String sql = "SELECT r.*, tr.nome as nome_tipo FROM RISCO r " +
+                 "INNER JOIN TIPO_RISCO tr ON r.id_tipo_risco = tr.id WHERE r.id = ?";
+    Risco risco = null;
+
+    try (Connection conn = ConnectionFactory.getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        
+        pstmt.setInt(1, id);
+        ResultSet rs = pstmt.executeQuery();
+
+        if (rs.next()) {
+            risco = new Risco();
+            risco.setId(rs.getInt("id"));
+            risco.setDescricao(rs.getString("descricao"));
+            risco.setOrigem(rs.getString("origem"));
+            risco.setContexto(rs.getString("contexto"));
+            risco.setDataIdentificacao(rs.getDate("data_identificacao").toLocalDate());
+            risco.setStatus(rs.getString("status"));
+
+            TipoRisco tipo = new TipoRisco();
+            tipo.setId(rs.getInt("id_tipo_risco"));
+            tipo.setNome(rs.getString("nome_tipo"));
+            risco.setTipoRisco(tipo);
+        }
+        rs.close();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return risco;
+}
+
+public void atualizar(Risco risco) {
+    String sql = "UPDATE RISCO SET descricao = ?, origem = ?, contexto = ?, data_identificacao = ?, status = ?, id_tipo_risco = ? WHERE id = ?";
+
+    try (Connection conn = ConnectionFactory.getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+        pstmt.setString(1, risco.getDescricao());
+        pstmt.setString(2, risco.getOrigem());
+        pstmt.setString(3, risco.getContexto());
+        pstmt.setByte(4, risco.getDataIdentificacao());
+        pstmt.setString(5, risco.getStatus());
+        pstmt.setFloat(6, risco.getTipoRisco().getId());
+        pstmt.setInt(7, risco.getId());
+
+        pstmt.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+}
+
+public void excluir(int id) {
+    String sql = "DELETE FROM RISCO WHERE id = ?";
+
+    try (Connection conn = ConnectionFactory.getConnection();
+         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        
+        pstmt.setInt(1, id);
+        pstmt.executeUpdate();
+
+    } catch (SQLException e) {
+        // Tratamento de erro: um risco pode ter dependências (avaliações, etc.)
+        // Em um sistema real, você precisaria tratar a exceção de violação de chave estrangeira
+        e.printStackTrace();
+    }
+}
+}
